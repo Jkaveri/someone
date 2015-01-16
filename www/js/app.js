@@ -60,6 +60,39 @@ someone.app.$app = (function() {
         }
       })
 
+      .state('app.apt', {
+        url: '/apt',
+        views:{
+          'menuContent':{
+            templateUrl: 'templates/apt.html'
+          }
+        }
+      })
+      .state('app.history', {
+        url: '/history',
+        views:{
+          'menuContent':{
+            templateUrl: 'templates/history.html'
+          }
+        }
+      })
+      .state('app.add_friend', {
+        url: '/friends/add',
+        views:{
+          'menuContent':{
+            templateUrl: 'templates/add_friend.html'
+          }
+        }
+      })
+      .state('app.settings',{
+        url: '/settings',
+        views:{
+          'menuContent':{
+            templateUrl: 'templates/settings.html'
+          }
+        }
+      });
+
       // if none of the above states are matched, use this as the fallback
       $urlRouterProvider.otherwise('/app/home');
     }
