@@ -1,0 +1,37 @@
+
+<ion-view title="First time setup">
+
+  <ion-content>
+
+    <div class="list">
+      <label class="item item-input item-floating-label">
+        <span class="input-label">First Name</span>
+        <input ng-model="user.first_name" type="text" placeholder="First Name">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Last Name</span>
+        <input ng-model="user.last_name" type="text" placeholder="Last Name">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Age</span>
+        <input ng-model="user.age" type="number" placeholder="age">
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Gender
+        </div>
+        <select ng-model="user.gender">
+          <option value="">Select</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+    </div>
+    <div class="padding">
+      <button ng-click="next('interest')" class="button button-block button-positive">
+        Next
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

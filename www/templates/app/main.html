@@ -1,0 +1,27 @@
+<!--
+The nav bar that will be updated as we navigate between views
+Additional attributes set its look, ion-nav-bar animation and icons
+Icons provided by Ionicons: http://ionicons.com/
+-->
+<ion-nav-bar class="bar-positive">
+  <ion-nav-back-button class="button-icon button-clear ion-ios7-arrow-back">
+  </ion-nav-back-button>
+</ion-nav-bar>
+
+<ion-tabs class="tabs-ion-top tabs-default">
+  <ion-tab title="Home" icon="icon ion-ios-home-outline" href="#/app/home">
+    <ion-nav-view name="home-tab"></ion-nav-view>
+  </ion-tab>
+  <ion-tab title="Appointment" icon="icon ion-ios-star-outline" href="#/app/apt">
+    <ion-nav-view name="apt-tab"></ion-nav-view>
+  </ion-tab>
+  <ion-tab title="History" icon="icon ion-ios-list-outline" href="#/app/history">
+    <ion-nav-view name="history-tab"></ion-nav-view>
+  </ion-tab>
+  <ion-tab title="Add friend" icon="icon ion-ios-personadd-outline" href="#/app/friends/add">
+    <ion-nav-view name="add_friend-tab"></ion-nav-view>
+  </ion-tab>
+  <ion-tab title="Settings" icon="icon ion-ios-gear-outline" href="#/app/settings">
+    <ion-nav-view name="settings-tab"></ion-nav-view>
+  </ion-tab>
+</ion-tabs>

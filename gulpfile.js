@@ -12,13 +12,24 @@ var paths = {
   sass: ['./scss/**/*.scss'],
   scripts : [
   './www/js/core.js',
+  //serivces
+  './www/js/services/*.js',
+  './www/js/services.js',
+  //controllers
   './www/js/controllers/*.js',
   './www/js/controllers.js',
+  //app
   './www/js/app.js'
+  ],
+  ionicons_fonts:[
+    './www/lib/ionicons/fonts/*'
+  ],
+  ionicons_scss:[
+    './www/lib/ionicons/scss/*.scss'
   ]
 };
 
-gulp.task('default', ['sass','scripts']);
+gulp.task('default', ['upgrade-ionicons','sass','scripts']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -63,7 +74,18 @@ gulp.task('scripts', function(){
 
   gulp.src(paths.scripts)
   .pipe(concat('app.js'))
-  .pipe(uglify())
+//  .pipe(uglify())
   .pipe(gulp.dest('./www/dist/'));
 
+});
+
+
+gulp.task('upgrade-ionicons',function(){
+  //copy fonts into ionic fonts.
+  gulp.src(paths.ionicons_fonts)
+  .pipe(gulp.dest('./www/lib/ionic/fonts/'));
+
+  //copy scss
+  gulp.src(paths.ionicons_scss)
+  .pipe(gulp.dest('./www/lib/ionic/scss/ionicons/'));
 });
