@@ -106,35 +106,25 @@ someone.app.$app = (function() {
 
       $stateProvider.state('firsttime', {
           url: '/firsttime',
-          abstract: true,
-          templateUrl: 'templates/firsttime/main.html',
+          abstract:true,
+          templateUrl: 'templates/firsttime.html',
           controller: 'FirstTimeCtrl',
           controllerAs:'uInfo'
         })
 
         .state('firsttime.userinfo', {
           url: '/userinfo',
-          views: {
-            'contentView': {
-              templateUrl: 'templates/firsttime/userinfo.html',
-            }
-          }
+          templateUrl: 'templates/firsttime-userinfo.html',
+
         })
-        .state('firstime.interestwith',{
-          url:'/interestwith',
-          views:{
-            'contentView':{
-              templateUrl: 'templates/firsttime/interest_gender.html'
-            }
-          }
+        .state('firsttime.interestgender',{
+          url:'/interestgender',
+          templateUrl: 'templates/firsttime-interest-gender.html',
+
         })
         .state('firsttime.availabletimes', {
-          url:'/availabletimes',
-          views: {
-            'contentView': {
-              templateUrl: 'templates/firsttime/available_times.html',
-            }
-          }
+         url:'/availabletimes',
+         templateUrl: 'templates/firsttime-available-times.html',
         });
 
       // if none of the above states are matched, use this as the fallback
