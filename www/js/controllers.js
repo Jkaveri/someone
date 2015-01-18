@@ -15,7 +15,8 @@ someone.controllers.$module = (function() {
   //register user info controller.
   module.controller('HomeCtrl', someone.controllers.HomeCtrl);
 
-
+  //register firstime user info.
+  module.controller('FirstTimeCtrl',someone.controllers.FirstTimeCtrl);
 
   return module;
 }());
