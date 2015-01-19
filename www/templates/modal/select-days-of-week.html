@@ -1,0 +1,18 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <button class="button button-clear button-positive" ng-click="closeSelectDaysOWModal('cancel')">Cancel</button>
+        <h1 class="title">Select day of month</h1>
+        <button class="button button-clear button-positive" ng-click="closeSelectDaysOWModal('ok')">Done</button>
+    </ion-header-bar>
+    <ion-content>
+        <ul class="list">
+            <li class="item item-checkbox"  ng-repeat="item in daysOW">
+                <label class="checkbox">
+                    <input type="checkbox"
+                           ng-model="item.selected">
+                </label>
+                {{::item.title}}
+            </li>
+        </ul>
+    </ion-content>
+</ion-modal-view>

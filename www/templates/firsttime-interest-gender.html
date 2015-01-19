@@ -1,9 +1,19 @@
 <ion-view title="Interest with">
-  <ion-content>
-    <div class="list">
-      <ion-checkbox ng-model="interest_with_male">Male</ion-checkbox>
-      <ion-checkbox ng-model="interest_with_female">Female</ion-checkbox>
+  <ion-header-bar>
 
-    </div>
+    <h1 class="title">Select your interest gender</h1>
+
+  </ion-header-bar>
+  <ion-content>
+    <ul class="list">
+
+      <li class="item item-checkbox"  ng-repeat="item in interest_genders">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="item.selected">
+        </label>
+        {{::item.title}}
+      </li>
+
+    </ul>
   </ion-content>
 </ion-view>
