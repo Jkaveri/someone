@@ -13,6 +13,7 @@ someone.app.$app = (function () {
 
     var app = angular.module('someone', [
             'ionic',
+            'ngCordova',
             'someone.controllers',
             'someone.services'
         ]),
@@ -31,22 +32,24 @@ someone.app.$app = (function () {
                 // for form inputs)
                 if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
+                    setTimeout(function () {
+                      $cordovaSplashscreen.hide();
+                    }, 5000);
                 }
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();
                 }
-
-                if (!$localStorage.get('firstTimeSetup')) {
+                console.log($localStorage.get('firsttimeSetup'));
+                if ($localStorage.get('firsttimeSetup')!== 'true') {
                     console.log('goto first time setup');
                     setTimeout(function () {
                         $location.path('/firsttime/userinfo');
                     });
                 }
 
-                setTimeout(function () {
-                    $cordovaSplashscreen.hide();
-                }, 5000)
+
             });
         }
 
@@ -70,10 +73,12 @@ someone.app.$app = (function () {
 
                 .state('app.home', {
                     url: "/home",
+
                     views: {
                         'home-tab': {
+                          controller: 'HomeCtrl as ctrl',
                             templateUrl: "templates/app/home.html",
-                            controller: 'HomeCtrl'
+
                         }
                     }
                 })
@@ -82,7 +87,8 @@ someone.app.$app = (function () {
                     url: '/apt',
                     views: {
                         'apt-tab': {
-                            templateUrl: 'templates/app/apt.html'
+                            templateUrl: 'templates/app/apt.html',
+                            controller:'AptController as ctrl'
                         }
                     }
                 })

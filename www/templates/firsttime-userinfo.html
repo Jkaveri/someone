@@ -9,15 +9,15 @@
     <div class="list">
       <label class="item item-input item-floating-label">
         <span class="input-label">First Name</span>
-        <input ng-model="user.first_name" type="text" placeholder="First Name">
+        <input ng-model="user.firstName" type="text" placeholder="First Name">
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">Last Name</span>
-        <input ng-model="user.last_name" type="text" placeholder="Last Name">
+        <input ng-model="user.lastName" type="text" placeholder="Last Name">
       </label>
       <label class="item item-input item-floating-label">
-        <span class="input-label">Age</span>
-        <input ng-model="user.age" type="number" placeholder="age">
+        <span class="input-label">Birthday</span>
+        <input ng-model="user.birthday" type="date" placeholder="birthday">
       </label>
       <label class="item item-input item-select">
         <div class="input-label">
@@ -29,7 +29,20 @@
           <option value="other">Other</option>
         </select>
       </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Address</span>
+        <input ng-model="user.address" type="address" placeholder="address">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Email</span>
+        <input ng-model="user.email" type="email" placeholder="email">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Password</span>
+        <input ng-model="user.password" type="password" placeholder="password">
+      </label>
+      
     </div>
-  
+
   </ion-content>
 </ion-view>

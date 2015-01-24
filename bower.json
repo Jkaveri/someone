@@ -8,6 +8,7 @@
     "ngCordova": "~0.1.11-alpha"
   },
   "dependencies": {
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "moment": "~2.9.0"
   }
 }

@@ -1,5 +1,26 @@
 <ion-view view-title="Current Appointment">
-  <ion-content>
-    <h1>Current Appointment</h1>
+  <ion-content id="apt">
+    <div ng-if="ctrl.apt == null && !ctrl.isLoading">
+      <p>You have not appointment!</p>
+    </div>
+     <div ng-if="ctrl.apt!=null">
+       <div class="map-container">
+
+       </div>
+       <div class="apt-detail">
+         <div class="row">
+           <div class="col col-10"><span class="icon ion-ios-location"></span></div>
+           <div class="col col-90">343 Pham Ngu Lao, P.9, Q. Tan Binh, Tp. Ho Chi Minh</div>
+         </div>
+         <div class="row">
+           <div class="col col-10"><span class="icon ion-clock"></span></div>
+           <div class="col col-90">Jan 18th, 2014 08:30 PM</div>
+         </div>
+         <div class="row row-bottom">
+           <div class="col col-60"><button class="button button-assertive button-block">Decline</button></div>
+           <div class="col col-60"><button class="button button-positive button-block">Accept</button></div>
+         </div>
+       </div>
+     </div>
   </ion-content>
 </ion-view>

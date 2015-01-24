@@ -261,7 +261,11 @@ someone.controllers.FirstTimeCtrl = (function () {
 
 
             $localStorage.setObject('user', user);
+            $localStorage.set('firsttimeSetup',true);
 
+            $timeout(function(){
+              $location.path('/app/home');
+            });
             console.log(user);
         };
 
