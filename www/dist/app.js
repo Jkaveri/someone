@@ -88,6 +88,14 @@
     return [];
   };
 
+  /***
+   * Create method for String. that help to make capitalize word
+   * @returns {string}
+   */
+  String.prototype.toCapitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
   window.someone = someone;
 }());
 
@@ -164,6 +172,82 @@ someone.services.LocalStorage = (function() {
   return constructor;
 }());
 
+/**
+ * Created by Ho on 1/18/2015.
+ */
+
+someone.namespace('someone.services');
+
+someone.services.MockData = (function() {
+    'use strict';
+
+    var constructor = function() {
+        return {
+          profile:{
+            id:"1",
+            userId:"123",
+            firstName:"Ho",
+            lastName:"Nguyen",
+            age: 18,
+            address:{
+              latitude:10,
+              longitude: 10,
+              address: "2/142 Thien Phuoc, P.9, Q. Tan Binh, Tp. Ho Chi Minh",
+            },
+            gender: "Male",
+            interestGenders:["female", "male"],
+          },
+          appointment:{
+            id:"1"
+          },
+        };
+    };
+
+    //Dependency Injection.
+    constructor.$inject = [];
+
+
+    return constructor;
+}());
+
+/**
+ * Created by Ho on 1/18/2015.
+ */
+
+someone.namespace('someone.services');
+
+someone.services.UserResource = (function () {
+    'use strict';
+
+    var constructor = function ($q, $http) {
+        var root = "http://localhost:3000/api/users";
+        return {
+            list: function () {
+            },
+            get: function () {
+            },
+            save: function (user) {
+                var deferred = $q.defer();
+                $http.post(root, user)
+                    .success(function (data, status) {
+                        deferred.resolve(data, status);
+                    })
+                    .error(function (data, status) {
+                        deferred.reject(data, status);
+                    });
+                console.log(deferred);
+                return deferred.promise;
+            }
+        };
+    };
+
+    //Dependency Injection.
+    constructor.$inject = ["$q", "$http"];
+
+
+    return constructor;
+}());
+
 someone.namespace('someone.services');
 
 someone.services.$module = (function(){
@@ -176,7 +260,8 @@ someone.services.$module = (function(){
 
   //register LocalStorage service.
   module.factory('$collectionUtil',someone.services.CollectionUtil);
-
+  //register LocalStorage service.
+  module.factory('UserResource',someone.services.UserResource);
 
   return module;
 }());
@@ -215,21 +300,65 @@ someone.controllers.AppCtrl = (function() {
   return constructor;
 }());
 
-
 someone.namespace('someone.controllers');
 
-someone.controllers.AptCtrl = (function(){
+someone.controllers.AptCtrl = (function() {
   'use strict';
 
-  var constructor = function($scope){
+  /**
+   * Appointment controller
+   */
+  var constructor = function($scope, $timeout, $q) {
     var self = this;
+
+
+
+    var init = function() {
+      get();
+    };
+
+    var get = function() {
+      var defered = $q.defer();
+
+      self.isLoading = true;
+
+      $timeout(function() {
+        self.apt = {
+           time: moment().add(2, 'd'),
+           location: {
+             latitude:10,
+             longitude:108,
+             address:'Toa Nha Internation Plaza - 343 pham ngu lao, P. pham ngu lao, Quan 1, tp. Ho Chi Minh'
+           }
+        };
+
+        self.isLoading = false;
+        defered.resolve();
+      }, 5000);
+
+      return defered;
+    };
+
+
+
+    /**
+     * Appointment instance.
+     */
+    self.apt = null;
+
+    /**
+     * Determine is loading dat
+     */
+    self.isLoading = false;
+
+
 
 
 
 
   };
 
-  constructor.$inject = ["$scope"];
+  constructor.$inject = ["$scope", "$timeout", "$q"];
 
   return constructor;
 }());
@@ -239,12 +368,13 @@ someone.namespace('someone.controllers');
 someone.controllers.FirstTimeCtrl = (function () {
     'use strict';
 
-    var constructor = function ($scope, $ionicModal, $timeout, $location, $localStorage, $state, $collectionUtil) {
+    var constructor = function ($scope, $ionicModal, $timeout, $location, $localStorage, $state, userRes) {
 
         var self = $scope;
         var step_prefix = "firsttime.";
         var steps = ["userinfo", "interestgender", "availabletimes"];
         var current_index = 0;
+        var lorem = new Lorem();
 
 
         //#region private functions.
@@ -290,16 +420,17 @@ someone.controllers.FirstTimeCtrl = (function () {
         /***
          * init days of week array with default value.
          * can use to reset.
+         * Sun as 0, Sat as 6
          */
         var initDaysOW = function () {
             self.daysOW = [
-                {title: "Mon", select: false, value: 0},
-                {title: "Tue", select: false, value: 1},
-                {title: "Wed", select: false, value: 2},
-                {title: "Thu", select: false, value: 3},
-                {title: "Fri", select: false, value: 4},
-                {title: "Sat", select: false, value: 5},
-                {title: "Sun", select: false, value: 6}
+                {title: "Sun", select: false, value: 0},
+                {title: "Mon", select: false, value: 1},
+                {title: "Tue", select: false, value: 2},
+                {title: "Wed", select: false, value: 3},
+                {title: "Thu", select: false, value: 4},
+                {title: "Fri", select: false, value: 5},
+                {title: "Sat", select: false, value: 6}
             ];
         };
 
@@ -329,66 +460,108 @@ someone.controllers.FirstTimeCtrl = (function () {
         /***
          * Save interest genders to user.
          */
-        var saveInterestGenders = function(){
-          var count = self.interest_genders.length;
-            for(var i = 0; i< count; i++){
-                if(self.interest_genders[i].selected){
+        var saveInterestGenders = function (user) {
+            var count = self.interestGenders.length;
+            user.interestGenders = [];
+            for (var i = 0; i < count; i++) {
+                if (self.interestGenders[i].selected) {
                     //add selected item's value to user.
-                    self.user.interest_genders.push(self.interest_genders[i].value);
+                    user.interestGenders.push(self.interestGenders[i].value);
                 }
             }
         };
         /***
          * Help to save available times to user.
+         * Convert from: {
+         *   daysOWStr:"Mon,Thu",
+         *   daysOW:[1, 4],
+         *   time: 19:30,
+         *   duration: 1
+         * }
+         * to: [
+         *    {
+         *      dayOW: 1,
+         *      items:[
+         *          {time: 19*60+30, duration: 1}
+         *      ]
+         *    },
+         *    {
+         *      dayOW: 4,
+         *      items:[
+         *          {time: 19*60+30, duration: 1}
+         *      ]
+         *    }
+         * ]
          */
-        var saveAvailableTimes = function(){
-           var count = self.available_times.length, item, obj, daysOW,
-                available_times = self.user.available_times || {};
-
-              for(var i = 0; i < count ; i++){
-                item = self.available_times[i];
+        var saveFreeTimes = function (user) {
+            var count = self.freeTimes.length, item, timeRange, daysOW,freeTime,
+                freeTimes =[], time, cached = [];
+            //loop over free times (user's input).
+            for (var i = 0; i < count; i++) {
+                //get item
+                item = self.freeTimes[i];
+                //day of weeks of this item.
                 daysOW = item.daysOW;
                 //no need to do any thing if user not select day of week.
-                if(!daysOW || daysOW.length < 1) continue;
+                if (!daysOW || daysOW.length < 1) continue;
 
-                obj = {time: item.time, duration: item.duration};
+                //parse time to moment.
+                time = moment(item.time);
+                 //convert time to interger.
+                //to minutes.
+                time = time.hours()*60+time.minutes();
 
-                for(var j = 0; j < daysOW.length; j++){
-                    if(available_times[daysOW[j]] == null){
-                        //init array
-                        available_times[daysOW[j]] = [];
+                timeRange = {time: time, duration: item.duration};
+
+                for (var j = 0; j < daysOW.length; j++) {
+                    var dayOW = daysOW[j], index = j;
+                    if(cached[dayOW] > -1){
+                        freeTime = freeTimes[cached[dayOW]];
+                    }else{
+                        freeTime = {
+                            dayOW: daysOW[j],
+                            items: []
+                        };
                     }
-                    //set available time.
-                    //key is day of week.
-                    available_times[daysOW[j]].push(obj);
+
+                    //push time range into item.
+                    freeTime.items.push(timeRange);
+
+                    freeTimes.push(freeTime);
                 }
+
             }
 
-            self.user.available_times = available_times;
+            user.freeTimes = freeTimes;
         };
 
         // #endregion private methods
 
 
         //#region public properties;
-        self.available_times = [{
-            daysOWStr: "",
-            daysOW: [],
-            time: null,
-            duration: 0
+        self.freeTimes = [{
+            daysOWStr: "Sat,Sun",
+            daysOW: [5,6],
+            time: new Date(2015, 1, 1, 18, 30, 0, 0),
+            duration: 1
         }];
 
         //user data.
         self.user = {
-            first_name: "",
-            last_name: "",
-            age: null,
+            firstName: lorem.createText(1,Lorem.TYPE.WORD).toCapitalize(),
+            lastName: lorem.createText(1,Lorem.TYPE.WORD).toCapitalize(),
+            birthday: new Date( Date.UTC(1992, 0, 8) ),
             gender: "male",
-            interest_genders:[],
+            interestGenders: [],
             /***
              * this field contain all available item. it map
              */
-            available_times: {}
+            freeTimes:[],
+            address: lorem.createText(5, Lorem.TYPE.WORD),
+            email: lorem.createText(2, Lorem.TYPE.WORD) + "@local.com",
+            phone: 123456789,
+            password:123
+
         };
 
         //determine user can go to previous step.
@@ -408,8 +581,8 @@ someone.controllers.FirstTimeCtrl = (function () {
         self.current_available_time = null;
 
         //interest genders
-        self.interest_genders =  [
-            {title: "Male", selected: false, value:"male"},
+        self.interestGenders = [
+            {title: "Male", selected: false, value: "male"},
             {title: "Female", selected: true, value: "female"}
         ];
 
@@ -491,32 +664,41 @@ someone.controllers.FirstTimeCtrl = (function () {
             //retrieve old value from database.
             user = angular.extend(user, self.user);
             //set interest value.
-            saveInterestGenders();
+            saveInterestGenders(user);
             //save available times.
-            saveAvailableTimes();
+            saveFreeTimes(user);
+
+            userRes.save(user).then(
+                //success
+                function (u) {
+                    $localStorage.setObject('user', u);
+                    $localStorage.set('firsttimeSetup', true);
+                    $timeout(function () {
+                        $location.path('/app/home');
+                    });
+                },
+                //error.
+                function () {
+                    alert('err');
+                }
+            );
 
 
-            $localStorage.setObject('user', user);
-            $localStorage.set('firsttimeSetup',true);
-
-            $timeout(function(){
-              $location.path('/app/home');
-            });
             console.log(user);
         };
 
 
         self.addAvailableTime = function () {
-            self.available_times.push({
+            self.freeTimes.push({
                 time: null,
                 duration: 0
             });
         };
 
         self.removeAvailableTime = function (item) {
-            var index = self.available_times.indexOf(item);
+            var index = self.freeTimes.indexOf(item);
             if (index > -1) {
-                self.available_times.splice(index, 1);
+                self.freeTimes.splice(index, 1);
             }
         };
 
@@ -531,9 +713,9 @@ someone.controllers.FirstTimeCtrl = (function () {
 
             self.current_available_time = item;
 
-            if(item && item.daysOW.length > 0){
+            if (item && item.daysOW.length > 0) {
                 //deserialize selected item form available time.
-                for(var i = 0; i <self.daysOW.length; i++){
+                for (var i = 0; i < self.daysOW.length; i++) {
                     self.daysOW[i].selected = item.daysOW.indexOf(self.daysOW[i].value) > -1;
                 }
             }
@@ -563,7 +745,7 @@ someone.controllers.FirstTimeCtrl = (function () {
     };
 
     //Dependency Injection.
-    constructor.$inject = ["$scope", "$ionicModal", "$timeout", "$location", "$localStorage", "$state", "$collectionUtil"];
+    constructor.$inject = ["$scope", "$ionicModal", "$timeout", "$location", "$localStorage", "$state", "UserResource"];
 
     return constructor;
 }());

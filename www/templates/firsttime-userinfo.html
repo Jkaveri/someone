@@ -17,7 +17,7 @@
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">Birthday</span>
-        <input ng-model="user.birthday" type="date" placeholder="birthday">
+        <input ng-model="user.birthday" type="date" placeholder="birthday" ng-model-options="{timezone:'UTC'}">
       </label>
       <label class="item item-input item-select">
         <div class="input-label">
@@ -31,7 +31,11 @@
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">Address</span>
-        <input ng-model="user.address" type="address" placeholder="address">
+        <input ng-model="user.address" type="text" placeholder="address">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Phone</span>
+        <input ng-model="user.phone" placeholder="Phone number" type="tel"/>
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">Email</span>

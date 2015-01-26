@@ -88,5 +88,13 @@
     return [];
   };
 
+  /***
+   * Create method for String. that help to make capitalize word
+   * @returns {string}
+   */
+  String.prototype.toCapitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
+
   window.someone = someone;
 }());

@@ -10,7 +10,8 @@ someone.services.$module = (function(){
 
   //register LocalStorage service.
   module.factory('$collectionUtil',someone.services.CollectionUtil);
-
+  //register LocalStorage service.
+  module.factory('UserResource',someone.services.UserResource);
 
   return module;
 }());
