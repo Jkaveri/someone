@@ -1,19 +1,30 @@
 <ion-view title="Interest with">
-  <ion-header-bar>
+    <ion-header-bar>
 
-    <h1 class="title">Select your interest gender</h1>
+        <h1 class="title">Select your interest gender</h1>
 
-  </ion-header-bar>
-  <ion-content>
-    <ul class="list">
+    </ion-header-bar>
+    <ion-content class="has-footer has-header">
+        <ul class="list">
 
-      <li class="item item-checkbox"  ng-repeat="item in interestGenders">
-        <label class="checkbox">
-          <input type="checkbox" ng-model="item.selected">
-        </label>
-        {{::item.title}}
-      </li>
+            <li class="item item-checkbox" ng-repeat="item in interestGenders">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="item.selected">
+                </label>
+                {{::item.title}}
+            </li>
 
-    </ul>
-  </ion-content>
+        </ul>
+    </ion-content>
+    <div class="bar bar-footer">
+        <button class="button button-positive button-clear pull-left" ng-cloak ng-click="back()" ng-show="canGoBack">
+            Back
+        </button>
+        <button class="button button-positive button-clear pull-right" ng-cloak ng-click="save()" ng-show="isLastStep">
+            Save
+        </button>
+        <button class="button button-positive button-clear pull-right" ng-cloak ng-click="next()"
+                ng-show="canGoNext && !isLastStep">Next
+        </button>
+    </div>
 </ion-view>

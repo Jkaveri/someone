@@ -1,52 +1,59 @@
-
 <ion-view title="First time setup">
 
-  <ion-header-bar>
-    <h1 class="title">Basic information</h1>
-  </ion-header-bar>
-  <ion-content>
+    <ion-header-bar>
+        <h1 class="title">Basic information</h1>
+    </ion-header-bar>
+    <ion-content class="has-footer has-header">
 
-    <div class="list">
-      <label class="item item-input item-floating-label">
-        <span class="input-label">First Name</span>
-        <input ng-model="user.firstName" type="text" placeholder="First Name">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Last Name</span>
-        <input ng-model="user.lastName" type="text" placeholder="Last Name">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Birthday</span>
-        <input ng-model="user.birthday" type="date" placeholder="birthday" ng-model-options="{timezone:'UTC'}">
-      </label>
-      <label class="item item-input item-select">
-        <div class="input-label">
-          Gender
+        <div class="list">
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.firstName.$invalid}">
+                <span class="input-label">First Name</span>
+                <input name="firstName" ng-model="user.firstName" type="text" placeholder="First Name" required>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.lastName.$invalid}">
+                <span class="input-label">Last Name</span>
+                <input name="lastName" ng-model="user.lastName" type="text" placeholder="Last Name" required>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.birthday.$invalid}">
+                <span class="input-label">Birthday</span>
+                <input name="birthday" ng-model="user.birthday" type="date" placeholder="birthday" ng-model-options="{timezone:'UTC'}" required>
+            </label>
+            <label class="item item-input item-select" ng-class="{invalid:uForm.gender.$invalid}">
+                <div class="input-label">
+                    Gender
+                </div>
+                <select name="gender" ng-model="user.gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.address.$invalid}">
+                <span class="input-label">Address</span>
+                <input name="address" ng-model="user.address" type="text" placeholder="address" required>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.phone.$invalid}">
+                <span class="input-label">Phone</span>
+                <input name="phone" ng-model="user.phone" placeholder="Phone number" type="tel" required/>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.email.$invalid}">
+                <span class="input-label">Email</span>
+                <input name="email" ng-model="user.email" type="email" placeholder="email" required>
+            </label>
+            <label class="item item-input item-floating-label" ng-class="{invalid:uForm.password.$invalid}">
+                <span class="input-label">Password</span>
+                <input name="password" ng-model="user.password" type="password" placeholder="password"
+                       ng-minlength="6"
+                       ng-maxlength="32"
+                       required>
+            </label>
+
         </div>
-        <select ng-model="user.gender">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Address</span>
-        <input ng-model="user.address" type="text" placeholder="address">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Phone</span>
-        <input ng-model="user.phone" placeholder="Phone number" type="tel"/>
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Email</span>
-        <input ng-model="user.email" type="email" placeholder="email">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Password</span>
-        <input ng-model="user.password" type="password" placeholder="password">
-      </label>
-      
-    </div>
 
-  </ion-content>
+    </ion-content>
+    <div class="bar bar-footer">
+           <button class="button button-positive button-clear pull-right" ng-class="{disabled:uForm.$invalid}" ng-cloak ng-click="uForm.$valid && next()"
+                ng-show="canGoNext && !isLastStep">Next
+        </button>
+    </div>
 </ion-view>

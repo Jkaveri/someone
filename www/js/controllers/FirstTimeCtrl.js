@@ -175,7 +175,7 @@ someone.controllers.FirstTimeCtrl = (function () {
 
         //#region public properties;
         self.freeTimes = [{
-            daysOWStr: "Sat,Sun",
+            daysOWStr: "Fri,Sat",
             daysOW: [5,6],
             time: new Date(2015, 1, 1, 18, 30, 0, 0),
             duration: 1
@@ -193,7 +193,7 @@ someone.controllers.FirstTimeCtrl = (function () {
              */
             freeTimes:[],
             address: lorem.createText(5, Lorem.TYPE.WORD),
-            email: lorem.createText(2, Lorem.TYPE.WORD) + "@local.com",
+            email: lorem.createText(2, Lorem.TYPE.WORD).replace(" ","_") + "@local.com",
             phone: 123456789,
             password:123
 
@@ -366,6 +366,23 @@ someone.controllers.FirstTimeCtrl = (function () {
             //reset daysOW
             initDaysOW();
             self.modal.hide();
+        };
+
+
+        self.addItem = function(){
+          self.freeTimes.push({
+              daysOWStr: "Fri, Sat",
+              daysOW: [5,6],
+              time: null,
+              duration: 1
+          });
+        };
+
+        self.removeItem = function(item){
+            var index = self.freeTimes.indexOf(item);
+            if(index > -1){
+                self.freeTimes.splice(index, 1);
+            }
         };
 
         //#endregion public methods.

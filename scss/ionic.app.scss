@@ -66,3 +66,29 @@ $ionicons-font-path: "../lib/ionicons/fonts" !default;
     height:100%;
   }
 }
+
+.invalid{
+  .input-label{
+    color:red;
+  }
+  ::-webkit-input-placeholder{
+    color:red;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: red;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: red;
+  }
+
+  :-ms-input-placeholder {
+    color: red;
+  }
+  input{
+    border-left:4px solid red;
+    padding-left:5px;
+
+  }
+}
