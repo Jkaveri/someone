@@ -100,11 +100,35 @@
 }());
 
 /**
- * Created by Ho on 1/18/2015.
+ * Created by Ho on 3/8/2015.
  */
 
-someone.namespace('someone.services');
+//register namespace someone.
+someone.namespace("someone");
+//register namespace someone.controllers
+someone.namespace("someone.controllers");
+//register namespace someone.services
+someone.namespace("someone.services");
+//register namespace someone.app
+someone.namespace('someone.app');
 
+/**
+ * Created by Ho on 3/8/2015.
+ */
+
+
+someone.configuration = (function () {
+    return {
+        apiBaseUrl: "http://henry.com:3000/api",
+        gcm: {
+            api_key: "",
+            app_id: ""
+        }
+    };
+}());
+/**
+ * Created by Ho on 1/18/2015.
+ */
 someone.services.CollectionUtil = (function() {
     'use strict';
 
@@ -136,8 +160,6 @@ someone.services.CollectionUtil = (function() {
 
     return constructor;
 }());
-
-someone.namespace('someone.services');
 
 someone.services.LocalStorage = (function() {
   'use strict';
@@ -176,8 +198,6 @@ someone.services.LocalStorage = (function() {
  * Created by Ho on 1/18/2015.
  */
 
-someone.namespace('someone.services');
-
 someone.services.MockData = (function() {
     'use strict';
 
@@ -211,16 +231,113 @@ someone.services.MockData = (function() {
 }());
 
 /**
- * Created by Ho on 1/18/2015.
+ * Created by Ho on 3/8/2015.
+ */
+someone.services.PushNotificationHelper = (function () {
+    'use strict';
+
+
+    constructor.$inject = ["$cordovaPush", "$ionicPlatform", "$rootScope"];
+
+    function constructor($cordovaPush, $ionicPlatform, $rootScope) {
+        debugger;
+        var registerConfig = {}, registerCallBack, iosNotificationReceiver, androidNotificationReceiver;
+
+        if (ionic.Platform.isAndroid()) {
+            registerConfig = {
+                senderID: someone.configuration.gcm.app_id
+            };
+
+            //register callback when user on android device.
+            registerCallBack = function (result) {
+                console.log(result);
+            };
+
+            //handle when user get notification on anroid device.
+            androidNotificationReceiver = function(event, notification){
+
+            };
+
+        } else if (ionic.Platform.isIOS()) {
+            registerConfig = {
+                "badge": true,
+                "sound": true,
+                "alert": true
+            };
+            //@TODO: register callback when user on ios device
+            registerCallBack = function (result) {
+                throw "Need implement callback for ios devices";
+            };
+            //@TODO: handle when user get notification on ios device.
+            iosNotificationReceiver = function(event, notification){
+                throw "Need implement callback for ios devices";
+            };
+        }
+
+        return {
+            registerOnReady: function () {
+                $cordovaPush.register(registerConfig).then(registerCallBack);
+            },
+            registerReceiver: function () {
+                if (ionic.Platform.isAndroid()) {
+                    $rootScope.on("$cordovaPush:notificationReceived", androidNotificationReceiver);
+                } else if (ionic.Platform.isIOS()) {
+                    $rootScope.on("$cordovaPush:notificationReceived", iosNotificationReceiver);
+                }
+            }
+        };
+    }
+
+
+    return constructor;
+}());
+/**
+ * Created by Ho on 3/8/2015.
  */
 
-someone.namespace('someone.services');
+someone.services.UserDeviceResource = (function () {
+    'use strict';
+
+    //injection
+    constructor.$inject = ["$q", "$http"];
+
+
+    function constructor($q, $http) {
+        var root = someone.configuration.apiBaseUrl + "/UserDevices";
+
+        return {
+            save: function (entity) {
+                var deferred = $q.defer();
+                $http.post(root, entity)
+                    .success(function (data, status) {
+                        deferred.resolve(data, status);
+                    })
+                    .error(function (data, status) {
+                        deferred.reject(data, status);
+                    });
+                console.log(deferred);
+
+                return deferred.promise;
+            }
+        };
+
+    }
+
+
+    return constructor;
+}());
+/**
+ * Created by Ho on 1/18/2015.
+ */
 
 someone.services.UserResource = (function () {
     'use strict';
 
-    var constructor = function ($q, $http) {
-        var root = "http://localhost:3000/api/users";
+    //Dependency Injection.
+    constructor.$inject = ["$q", "$http"];
+    //constructor
+    function constructor ($q, $http) {
+        var root = someone.configuration.apiBaseUrl + "/users";
         return {
             list: function () {
             },
@@ -241,35 +358,38 @@ someone.services.UserResource = (function () {
         };
     };
 
-    //Dependency Injection.
-    constructor.$inject = ["$q", "$http"];
+
 
 
     return constructor;
 }());
 
-someone.namespace('someone.services');
+someone.services.$module = (function () {
+    'use strict';
 
-someone.services.$module = (function(){
-  'use strict';
+    var m = angular.module('someone.services', ["ionic", "ngCordova"]);
 
-  var module = angular.module('someone.services',[]);
+    //register LocalStorage service.
+    m.factory('$localStorage', someone.services.LocalStorage);
 
-  //register LocalStorage service.
-  module.factory('$localStorage',someone.services.LocalStorage);
+    //register LocalStorage service.
+    m.factory('$collectionUtil', someone.services.CollectionUtil);
+    //register LocalStorage service.
+    m.factory('UserResource', someone.services.UserResource);
+    //register LocalStorage service.
+    m.factory('UserDeviceResource', someone.services.UserDeviceResource);
+    debugger;
+    console.log(someone.services.PushNotificationHelper);
+    //register PushNotificationHelper service.
+    m.factory('PushNotificationHelper', someone.services.PushNotificationHelper);
 
-  //register LocalStorage service.
-  module.factory('$collectionUtil',someone.services.CollectionUtil);
-  //register LocalStorage service.
-  module.factory('UserResource',someone.services.UserResource);
 
-  return module;
+    return m;
 }());
 
 
-someone.namespace('someone.controllers');
 
-someone.controllers.AddFriend = (function(){
+someone.controllers.AddFriendCtrl = (function(){
   'use strict';
 
   var constructor = function($scope){
@@ -283,7 +403,6 @@ someone.controllers.AddFriend = (function(){
   return constructor;
 }());
 
-someone.namespace('someone.controllers');
 
 someone.controllers.AppCtrl = (function() {
   'use strict';
@@ -300,7 +419,6 @@ someone.controllers.AppCtrl = (function() {
   return constructor;
 }());
 
-someone.namespace('someone.controllers');
 
 someone.controllers.AptCtrl = (function() {
   'use strict';
@@ -363,7 +481,6 @@ someone.controllers.AptCtrl = (function() {
   return constructor;
 }());
 
-someone.namespace('someone.controllers');
 
 someone.controllers.FirstTimeCtrl = (function () {
     'use strict';
@@ -767,7 +884,6 @@ someone.controllers.FirstTimeCtrl = (function () {
     return constructor;
 }());
 
-someone.namespace('someone.controllers');
 
 someone.controllers.HomeCtrl = (function() {
   'use strict';
@@ -791,9 +907,8 @@ someone.controllers.HomeCtrl = (function() {
 }());
 
 
-someone.namespace('someone.controllers');
 
-someone.controllers.Settings = (function(){
+someone.controllers.SettingsCtrl = (function(){
   'use strict';
 
   var constructor = function($scope){
@@ -842,7 +957,7 @@ someone.controllers.$module = (function() {
 // 'some.controllers' is found in controllers.js
 
 //register global namespace.
-someone.namespace('someone.app');
+
 
 someone.app.$app = (function () {
     'use strict';
@@ -862,7 +977,9 @@ someone.app.$app = (function () {
         '$localStorage',
         '$location',
         '$cordovaSplashscreen',
-        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen) {
+        'PushNotificationHelper',
+        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper) {
+debugger;
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -873,6 +990,14 @@ someone.app.$app = (function () {
                       $cordovaSplashscreen.hide();
                     }, 5000);
                 }
+
+                //register notification service for android.
+                console.log(ionic.Platform.isWebView());
+                if(!ionic.Platform.isWebView()){
+                    PushNotificationHelper.registerOnReady();
+                }
+
+
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();

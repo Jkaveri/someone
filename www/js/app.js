@@ -6,7 +6,7 @@
 // 'some.controllers' is found in controllers.js
 
 //register global namespace.
-someone.namespace('someone.app');
+
 
 someone.app.$app = (function () {
     'use strict';
@@ -26,7 +26,9 @@ someone.app.$app = (function () {
         '$localStorage',
         '$location',
         '$cordovaSplashscreen',
-        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen) {
+        'PushNotificationHelper',
+        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper) {
+debugger;
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -37,6 +39,14 @@ someone.app.$app = (function () {
                       $cordovaSplashscreen.hide();
                     }, 5000);
                 }
+
+                //register notification service for android.
+                console.log(ionic.Platform.isWebView());
+                if(!ionic.Platform.isWebView()){
+                    PushNotificationHelper.registerOnReady();
+                }
+
+
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();

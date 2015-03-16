@@ -2,13 +2,14 @@
  * Created by Ho on 1/18/2015.
  */
 
-someone.namespace('someone.services');
-
 someone.services.UserResource = (function () {
     'use strict';
 
-    var constructor = function ($q, $http) {
-        var root = "http://localhost:3000/api/users";
+    //Dependency Injection.
+    constructor.$inject = ["$q", "$http"];
+    //constructor
+    function constructor ($q, $http) {
+        var root = someone.configuration.apiBaseUrl + "/users";
         return {
             list: function () {
             },
@@ -29,8 +30,7 @@ someone.services.UserResource = (function () {
         };
     };
 
-    //Dependency Injection.
-    constructor.$inject = ["$q", "$http"];
+
 
 
     return constructor;

@@ -1,7 +1,6 @@
 
-someone.namespace('someone.controllers');
 
-someone.controllers.Settings = (function(){
+someone.controllers.SettingsCtrl = (function(){
   'use strict';
 
   var constructor = function($scope){

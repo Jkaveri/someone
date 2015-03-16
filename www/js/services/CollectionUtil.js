@@ -1,9 +1,6 @@
 /**
  * Created by Ho on 1/18/2015.
  */
-
-someone.namespace('someone.services');
-
 someone.services.CollectionUtil = (function() {
     'use strict';
 

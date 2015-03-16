@@ -1,5 +1,3 @@
-someone.namespace('someone.services');
-
 someone.services.LocalStorage = (function() {
   'use strict';
 

@@ -1,4 +1,3 @@
-someone.namespace('someone.controllers');
 
 someone.controllers.AptCtrl = (function() {
   'use strict';

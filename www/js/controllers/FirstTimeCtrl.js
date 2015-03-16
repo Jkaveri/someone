@@ -1,4 +1,3 @@
-someone.namespace('someone.controllers');
 
 someone.controllers.FirstTimeCtrl = (function () {
     'use strict';

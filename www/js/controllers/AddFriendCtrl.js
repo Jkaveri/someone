@@ -1,7 +1,6 @@
 
-someone.namespace('someone.controllers');
 
-someone.controllers.AddFriend = (function(){
+someone.controllers.AddFriendCtrl = (function(){
   'use strict';
 
   var constructor = function($scope){

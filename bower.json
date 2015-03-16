@@ -2,14 +2,15 @@
   "name": "SomeOneApp",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-beta.14",
-    "platform": "~1.3.0",
-    "ionicons": "~2.0.1",
-    "ngCordova": "~0.1.11-alpha"
+    "platform": "~1.3.0"
   },
   "dependencies": {
     "lodash": "~2.4.1",
     "moment": "~2.9.0",
-    "loremjs": "https://github.com/f/loremjs.git"
+    "loremjs": "https://github.com/f/loremjs.git",
+    "angular": "~1.3.14",
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.0",
+    "ngCordova": "~0.1.12-alpha",
+    "ionicons": "~2.0.1"
   }
 }

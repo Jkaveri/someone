@@ -2,8 +2,6 @@
  * Created by Ho on 1/18/2015.
  */
 
-someone.namespace('someone.services');
-
 someone.services.MockData = (function() {
     'use strict';
 
