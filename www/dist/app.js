@@ -119,10 +119,10 @@ someone.namespace('someone.app');
 
 someone.configuration = (function () {
     return {
-        apiBaseUrl: "http://henry.com:3000/api",
+        apiBaseUrl: "http://192.168.100.2:8080/api",
         gcm: {
             api_key: "",
-            app_id: ""
+            app_id: "849038283746"
         }
     };
 }());
@@ -233,19 +233,33 @@ someone.services.MockData = (function() {
 /**
  * Created by Ho on 3/8/2015.
  */
-someone.services.PushNotificationHelper = (function () {
+someone.services.PushNotificationHelper = function () {
     'use strict';
 
+    var androidNotificationReceiver, iosNotificationReceiver;
 
-    constructor.$inject = ["$cordovaPush", "$ionicPlatform", "$rootScope"];
+    constructor.$inject = [];
 
-    function constructor($cordovaPush, $ionicPlatform, $rootScope) {
+    constructor.static = {
+        onNotification: function (e) {
+            if (ionic.Platform.isAndroid()) {
+                androidNotificationReceiver(e);
+            } else if (ionic.Platform.isIOS()) {
+                iosNotificationReceiver(e);
+            }
+        }
+    };
+
+    function constructor() {
         debugger;
-        var registerConfig = {}, registerCallBack, iosNotificationReceiver, androidNotificationReceiver;
+        var registerConfig = {}, registerCallBack, registerError,
+            pushNotification;
+
 
         if (ionic.Platform.isAndroid()) {
             registerConfig = {
-                senderID: someone.configuration.gcm.app_id
+                "senderID": someone.configuration.gcm.app_id,
+                "ecb": "someone.services.PushNotificationHelper.static.onNotification"
             };
 
             //register callback when user on android device.
@@ -254,9 +268,34 @@ someone.services.PushNotificationHelper = (function () {
             };
 
             //handle when user get notification on anroid device.
-            androidNotificationReceiver = function(event, notification){
+            androidNotificationReceiver = function (notification) {
+                debugger;
+                switch (notification.event) {
+                    case 'registered':
+                        if (notification.regid.length > 0) {
+                            alert('registration ID = ' + notification.regid);
+                        }
+                        break;
 
+                    case 'message':
+                        // this is the actual push notification. its format depends on the data model from the push server
+                        alert('message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
+                        break;
+
+                    case 'error':
+                        alert('GCM error = ' + notification.msg);
+                        break;
+
+                    default:
+                        alert('An unknown GCM event has occurred');
+                        break;
+                }
             };
+
+            //
+            registerError = function () {
+                alert('could not reigster notification');
+            }
 
         } else if (ionic.Platform.isIOS()) {
             registerConfig = {
@@ -269,20 +308,28 @@ someone.services.PushNotificationHelper = (function () {
                 throw "Need implement callback for ios devices";
             };
             //@TODO: handle when user get notification on ios device.
-            iosNotificationReceiver = function(event, notification){
+            iosNotificationReceiver = function (event, notification) {
                 throw "Need implement callback for ios devices";
             };
+
+            registerError = function () {
+                alert('could not reigster notification');
+            }
+        }
+
+        function getPushNotification() {
+            return window.plugins ? window.plugins.pushNotification : null;
         }
 
         return {
             registerOnReady: function () {
-                $cordovaPush.register(registerConfig).then(registerCallBack);
-            },
-            registerReceiver: function () {
-                if (ionic.Platform.isAndroid()) {
-                    $rootScope.on("$cordovaPush:notificationReceived", androidNotificationReceiver);
-                } else if (ionic.Platform.isIOS()) {
-                    $rootScope.on("$cordovaPush:notificationReceived", iosNotificationReceiver);
+
+                pushNotification = getPushNotification();
+
+                if (pushNotification) {
+                    pushNotification.register(registerCallBack, registerError, registerConfig);
+                } else {
+                    alert("Missing Push Notification Plugin");
                 }
             }
         };
@@ -290,7 +337,8 @@ someone.services.PushNotificationHelper = (function () {
 
 
     return constructor;
-}());
+
+}();
 /**
  * Created by Ho on 3/8/2015.
  */
@@ -315,7 +363,6 @@ someone.services.UserDeviceResource = (function () {
                     .error(function (data, status) {
                         deferred.reject(data, status);
                     });
-                console.log(deferred);
 
                 return deferred.promise;
             }
@@ -378,8 +425,6 @@ someone.services.$module = (function () {
     m.factory('UserResource', someone.services.UserResource);
     //register LocalStorage service.
     m.factory('UserDeviceResource', someone.services.UserDeviceResource);
-    debugger;
-    console.log(someone.services.PushNotificationHelper);
     //register PushNotificationHelper service.
     m.factory('PushNotificationHelper', someone.services.PushNotificationHelper);
 
@@ -978,7 +1023,8 @@ someone.app.$app = (function () {
         '$location',
         '$cordovaSplashscreen',
         'PushNotificationHelper',
-        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper) {
+        '$rootScope',
+        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper, $rootScope) {
 debugger;
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -991,9 +1037,8 @@ debugger;
                     }, 5000);
                 }
 
-                //register notification service for android.
-                console.log(ionic.Platform.isWebView());
-                if(!ionic.Platform.isWebView()){
+                //register notification service for android
+                if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
                     PushNotificationHelper.registerOnReady();
                 }
 
@@ -1038,8 +1083,7 @@ debugger;
                     views: {
                         'home-tab': {
                           controller: 'HomeCtrl as ctrl',
-                            templateUrl: "templates/app/home.html",
-
+                            templateUrl: "templates/app/home.html"
                         }
                     }
                 })
@@ -1081,24 +1125,24 @@ debugger;
             $stateProvider.state('firsttime', {
                 url: '/firsttime',
                 abstract: true,
-                templateUrl: 'templates/firsttime.html',
+                templateUrl: 'templates/firsttime/firsttime.html',
                 controller: 'FirstTimeCtrl',
                 controllerAs: 'uInfo'
             })
 
                 .state('firsttime.userinfo', {
                     url: '/userinfo',
-                    templateUrl: 'templates/firsttime-userinfo.html'
+                    templateUrl: 'templates/firsttime/firsttime-userinfo.html'
 
                 })
                 .state('firsttime.interestgender', {
                     url: '/interestgender',
-                    templateUrl: 'templates/firsttime-interest-gender.html'
+                    templateUrl: 'templates/firsttime/firsttime-interest-gender.html'
 
                 })
                 .state('firsttime.availabletimes', {
                     url: '/availabletimes',
-                    templateUrl: 'templates/firsttime-available-times.html'
+                    templateUrl: 'templates/firsttime/firsttime-available-times.html'
                 });
 
             // if none of the above states are matched, use this as the fallback

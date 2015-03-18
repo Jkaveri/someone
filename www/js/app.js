@@ -27,7 +27,8 @@ someone.app.$app = (function () {
         '$location',
         '$cordovaSplashscreen',
         'PushNotificationHelper',
-        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper) {
+        '$rootScope',
+        function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper, $rootScope) {
 debugger;
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -40,9 +41,8 @@ debugger;
                     }, 5000);
                 }
 
-                //register notification service for android.
-                console.log(ionic.Platform.isWebView());
-                if(!ionic.Platform.isWebView()){
+                //register notification service for android
+                if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
                     PushNotificationHelper.registerOnReady();
                 }
 
@@ -87,8 +87,7 @@ debugger;
                     views: {
                         'home-tab': {
                           controller: 'HomeCtrl as ctrl',
-                            templateUrl: "templates/app/home.html",
-
+                            templateUrl: "templates/app/home.html"
                         }
                     }
                 })
@@ -130,24 +129,24 @@ debugger;
             $stateProvider.state('firsttime', {
                 url: '/firsttime',
                 abstract: true,
-                templateUrl: 'templates/firsttime.html',
+                templateUrl: 'templates/firsttime/firsttime.html',
                 controller: 'FirstTimeCtrl',
                 controllerAs: 'uInfo'
             })
 
                 .state('firsttime.userinfo', {
                     url: '/userinfo',
-                    templateUrl: 'templates/firsttime-userinfo.html'
+                    templateUrl: 'templates/firsttime/firsttime-userinfo.html'
 
                 })
                 .state('firsttime.interestgender', {
                     url: '/interestgender',
-                    templateUrl: 'templates/firsttime-interest-gender.html'
+                    templateUrl: 'templates/firsttime/firsttime-interest-gender.html'
 
                 })
                 .state('firsttime.availabletimes', {
                     url: '/availabletimes',
-                    templateUrl: 'templates/firsttime-available-times.html'
+                    templateUrl: 'templates/firsttime/firsttime-available-times.html'
                 });
 
             // if none of the above states are matched, use this as the fallback

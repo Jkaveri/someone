@@ -22,7 +22,6 @@ someone.services.UserDeviceResource = (function () {
                     .error(function (data, status) {
                         deferred.reject(data, status);
                     });
-                console.log(deferred);
 
                 return deferred.promise;
             }

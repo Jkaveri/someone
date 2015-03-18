@@ -17,6 +17,7 @@
   },
   "cordovaPlugins": [
     "./engine/cordova-crosswalk-engine-c0.6.1",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    "https://github.com/phonegap-build/PushPlugin.git"
   ]
 }

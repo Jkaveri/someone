@@ -12,8 +12,6 @@ someone.services.$module = (function () {
     m.factory('UserResource', someone.services.UserResource);
     //register LocalStorage service.
     m.factory('UserDeviceResource', someone.services.UserDeviceResource);
-    debugger;
-    console.log(someone.services.PushNotificationHelper);
     //register PushNotificationHelper service.
     m.factory('PushNotificationHelper', someone.services.PushNotificationHelper);
 

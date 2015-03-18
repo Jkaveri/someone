@@ -5,10 +5,10 @@
 
 someone.configuration = (function () {
     return {
-        apiBaseUrl: "http://henry.com:3000/api",
+        apiBaseUrl: "http://192.168.100.2:8080/api",
         gcm: {
             api_key: "",
-            app_id: ""
+            app_id: "849038283746"
         }
     };
 }());
