@@ -29,7 +29,7 @@ someone.app.$app = (function () {
         'PushNotificationHelper',
         '$rootScope',
         function ($ionicPlatform, $localStorage, $location, $cordovaSplashscreen, PushNotificationHelper, $rootScope) {
-debugger;
+            debugger;
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -37,7 +37,7 @@ debugger;
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
                     setTimeout(function () {
-                      $cordovaSplashscreen.hide();
+                        $cordovaSplashscreen.hide();
                     }, 5000);
                 }
 
@@ -52,7 +52,7 @@ debugger;
                     StatusBar.styleDefault();
                 }
                 console.log($localStorage.get('firsttimeSetup'));
-                if ($localStorage.get('firsttimeSetup')!== 'true') {
+                if ($localStorage.get('firsttimeSetup') !== 'true') {
                     console.log('goto first time setup');
                     setTimeout(function () {
                         $location.path('/firsttime/userinfo');
@@ -86,7 +86,7 @@ debugger;
 
                     views: {
                         'home-tab': {
-                          controller: 'HomeCtrl as ctrl',
+                            controller: 'HomeCtrl as ctrl',
                             templateUrl: "templates/app/home.html"
                         }
                     }
@@ -97,7 +97,7 @@ debugger;
                     views: {
                         'apt-tab': {
                             templateUrl: 'templates/app/apt.html',
-                            controller:'AptController as ctrl'
+                            controller: 'AptController as ctrl'
                         }
                     }
                 })

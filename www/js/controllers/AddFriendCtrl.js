@@ -1,15 +1,9 @@
-
-
-someone.controllers.AddFriendCtrl = (function(){
-  'use strict';
-
-  var constructor = function($scope){
-    var self = $scope;
-  
-
-  };
-
-  constructor.$inject = ["$scope"];
-
-  return constructor;
+/*global someone*/
+someone.controllers.AddFriendCtrl = (function () {
+    'use strict';
+    constructor.$inject = ['$scope'];
+    function constructor($scope) {
+        var self = $scope;
+    }
+    return constructor;
 }());

@@ -1,15 +1,17 @@
+/*global someone*/
+someone.controllers.AppCtrl = (function () {
+    'use strict';
 
-someone.controllers.AppCtrl = (function() {
-  'use strict';
+    //Dependency Injection.
+    Constructor.$inject = ['$ionicModal', '$timeout', '$location'];
 
-  var constructor = function($scope, $ionicModal, $timeout, $location) {
-    this.home_title = "Home";
-    console.log('AptCtrl');
-  //  $location.path('/firsttime/userinfo');
-  };
+    function Constructor($ionicModal, $timeout, $location) {
+        var vm = this;
+        vm.homeTitle = 'Home';
 
-  //Dependency Injection.
-  constructor.$inject = ["$scope", "$ionicModal", "$timeout", "$location"];
+        //  $location.path('/firsttime/userinfo');
+    }
 
-  return constructor;
+    return Constructor;
+
 }());
